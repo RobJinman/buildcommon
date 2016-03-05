@@ -1,5 +1,7 @@
 apply plugin: "groovy"
+apply plugin: "maven-publish"
 
+group = "com.recursiveloop.gradle"
 version = "0.0.1-SNAPSHOT"
 
 task wrapper(type: Wrapper) {
@@ -9,5 +11,23 @@ task wrapper(type: Wrapper) {
 dependencies {
   compile gradleApi()
   compile localGroovy()
+}
+
+logger.quiet("The project dir: $projectDir")
+
+publishing {
+  publications {
+    buildcommon(MavenPublication) {
+      from components.java
+      artifactId "buildcommon"
+    }
+  }
+
+  repositories {
+    maven {
+      name "local"
+      url "file://$projectDir/../../mvnrepo"
+    }
+  }
 }
 
