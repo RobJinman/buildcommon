@@ -4,7 +4,6 @@ apply plugin: "maven-publish"
 
 ext {
   artifactBaseName = "buildcommon"
-  artifactoryBaseUrl = "http://localhost:8081/artifactory"
   artifactorySnapshotRepoUrl = "$artifactoryBaseUrl/libs-snapshot-local"
   artifactoryReleaseRepoUrl = "$artifactoryBaseUrl/libs-release-local"
 }
