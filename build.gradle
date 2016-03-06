@@ -1,19 +1,41 @@
 apply plugin: "groovy"
 apply plugin: "maven-publish"
 
-group = "com.recursiveloop.gradle"
-version = "0.0.1-SNAPSHOT"
-
-task wrapper(type: Wrapper) {
-  gradleVersion = "2.6"
+ext {
+  artifactBaseName = "buildcommon"
+  artifactoryBaseUrl = "http://localhost:8081/artifactory"
+  artifactorySnapshotRepoUrl = "$artifactoryBaseUrl/libs-snapshot-local"
+  artifactoryReleaseRepoUrl = "$artifactoryBaseUrl/libs-release-local"
 }
+
+group = "com.recursiveloop.gradle"
+version = "0.1-SNAPSHOT"
 
 dependencies {
   compile gradleApi()
   compile localGroovy()
 }
 
-logger.quiet("The project dir: $projectDir")
+task wrapper(type: Wrapper) {
+  gradleVersion = "2.6"
+}
+
+task sourcesJar(type: Jar) {
+  baseName artifactBaseName
+  classifier "sources"
+  from sourceSets.main.allSource
+}
+
+task groovydocJar(type: Jar, dependsOn: groovydoc) {
+  baseName artifactBaseName
+  classifier "groovydoc"
+  from groovydoc.destinationDir
+}
+
+artifacts {
+  archives sourcesJar
+  archives groovydocJar
+}
 
 publishing {
   publications {
@@ -25,9 +47,14 @@ publishing {
 
   repositories {
     maven {
-      name "local"
-      url "file://$projectDir/../../mvnrepo"
+      name "artifactory"
+      url project.version.endsWith("-SNAPSHOT") ?
+        artifactorySnapshotRepoUrl : artifactoryReleaseRepoUrl
+
+      credentials {
+        username = artifactoryUsername
+        password = artifactoryPassword
+      }
     }
   }
 }
-

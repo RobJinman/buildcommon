@@ -16,6 +16,13 @@ class VersionsPlugin implements Plugin<Project> {
 
     project.afterEvaluate {
       project.version = readVersion(project)
+
+      if (System.env.BUILD_NUMBER != null) {
+        project.version.build = System.env.BUILD_NUMBER
+      }
+      if (System.env.SOURCE_BUILD_NUMBER != null) {
+        project.version.build = System.env.SOURCE_BUILD_NUMBER
+      }
     }
 
     project.task("printVersion") {
@@ -29,7 +36,8 @@ class VersionsPlugin implements Plugin<Project> {
 
   ProjectVersion readVersion(Project project) {
     if (!project.versions.versionFile.exists()) {
-      throw new GradleException("Required version file does not exist: $project.versions.versionFile.canonicalPath")
+      throw new GradleException("Required version file does not exist:"
+        + " $project.versions.versionFile.canonicalPath")
     }
 
     Properties props = new Properties()
@@ -39,6 +47,6 @@ class VersionsPlugin implements Plugin<Project> {
     }
 
     new ProjectVersion(props.major.toInteger(), props.minor.toInteger(),
-      props.patch.toInteger(), props.release.toBoolean())
+      0, props.release.toBoolean())
   }
 }
