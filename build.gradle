@@ -1,4 +1,5 @@
 apply plugin: "groovy"
+apply plugin: "distribution"
 apply plugin: "maven-publish"
 
 ext {
@@ -37,11 +38,24 @@ artifacts {
   archives groovydocJar
 }
 
+distributions {
+  main {
+    baseName = artifactBaseName
+
+    contents {
+      from { libsDir }
+    }
+  }
+}
+
 publishing {
   publications {
     buildcommon(MavenPublication) {
       from components.java
       artifactId "buildcommon"
+
+      artifact sourcesJar
+      artifact groovydocJar
     }
   }
 
