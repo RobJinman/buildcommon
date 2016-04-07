@@ -18,10 +18,10 @@ class VersionsPlugin implements Plugin<Project> {
       project.version = readVersion(project)
 
       if (System.env.BUILD_NUMBER != null) {
-        project.version.build = System.env.BUILD_NUMBER
+        project.version.build = System.env.BUILD_NUMBER.toInteger()
       }
       if (System.env.SOURCE_BUILD_NUMBER != null) {
-        project.version.build = System.env.SOURCE_BUILD_NUMBER
+        project.version.build = System.env.SOURCE_BUILD_NUMBER.toInteger()
       }
     }
 

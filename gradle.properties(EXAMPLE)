@@ -1,0 +1,8 @@
+# Copy this file, rename it gradle.properties, customise accordingly
+# and place in /var/libs/jenkins/.gradle and/or $HOME/.gradle.
+
+org.gradle.daemon=true
+artifactoryBaseUrl=http://localhost:8081/artifactory
+artifactoryUsername=admin
+artifactoryPassword=password
+
